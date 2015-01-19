@@ -15,6 +15,7 @@ describe 'Given the results of Category.find_all_with_article_counters' do
 end
 
 describe "Category" do
+  before(:each) { Blog.delete_all }
   it "should know published_articles" do
     Factory(:blog)
     c = Factory(:category, :permalink => 'Ubbercool')
@@ -40,10 +41,36 @@ end
 
 describe Category do
   describe "permalink" do
-    before(:each) { Factory(:blog) }
+    before(:each) do 
+      Blog.delete_all
+      Factory(:blog) 
+    end
     subject { Factory(:category, :permalink => 'software').permalink_url }
     it { should == 'http://myblog.net/category/software' }
   end
 end
 
+describe Category do
+  describe "valid" do
+    context "when valid" do
+      it "confirms the model is valid" do
+        c = Category.new :name => 'Sample Category'
+        c.should be_valid
+      end
+    end
 
+    context "when invalid" do
+      before(:each) { @category = Category.new name: 'Sample' }
+
+      it "should confirm for blank name" do
+        @category.name = nil
+        @category.should be_invalid
+      end
+
+      it "should confirm when name already taken" do
+        Category.create name: "Sample"
+        @category.should be_invalid
+      end
+    end
+  end
+end

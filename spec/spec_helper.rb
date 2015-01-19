@@ -33,12 +33,25 @@ end
 
 RSpec.configure do |config|
   config.mock_with :rspec
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = false
   config.use_instantiated_fixtures  = false
   config.fixture_path = "#{::Rails.root}/test/fixtures"
 
   config.before(:each) do
     Localization.lang = :default
+  end
+
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do |example|
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do |example|
+    DatabaseCleaner.clean
   end
 end
 

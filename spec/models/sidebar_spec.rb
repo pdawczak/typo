@@ -9,6 +9,7 @@ describe Sidebar do
 
   describe "#find_all_visible" do
     before do
+      Sidebar.delete_all
       AmazonSidebar.new(:active_position => 1).save
       AuthorsSidebar.new().save
     end

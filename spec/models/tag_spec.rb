@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe Tag do
   before(:each) do
+    Blog.delete_all
+    Tag.delete_all
     Factory(:blog)
   end
   it 'we can Tag.get by name' do
